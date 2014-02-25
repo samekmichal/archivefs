@@ -1,0 +1,24 @@
+===============================================================================
+TODO ASAP
+===============================================================================
+streambuffer cloning - check
+
+
+===============================================================================
+TODO
+===============================================================================
+Vlastnictví souborů podle vlastníka archivu ?
+Podpora zápisu u taru - přetížit metody pro přidání souboru
+Vytvořit vlastní magic soubory .mgc
+
+
+===============================================================================
+POSSIBLE EXTENSIONS
+===============================================================================
+Přejmenování adresářů - komprimace/dekomprimace
+- využít stávající konstuktory s create archive
+- definovat další konstruktor pro FileBuffer, kterému se přímo předá soubor
+
+Symlinky
+man page
+rozšíření pro nautilus

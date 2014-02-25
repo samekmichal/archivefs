@@ -1,0 +1,60 @@
+/* Project:  ArchiveFS
+ * Author:   Michal SAMEK
+ * Email:    xsamek01@fit.vutbr.cz
+ * Desc:     Header file for tardriver.cpp
+ * Modified: 04/2012
+ */
+
+#ifndef TAR_DRIVER_HPP
+#define TAR_DRIVER_HPP
+
+#include <cstdio>
+#include <sys/types.h>
+#include <libtar.h>
+
+#include "archivedriver.hpp"
+
+using namespace std;
+class FileSystem;
+
+class TarFileData: public FileData {
+public:
+  TarFileData(off_t _offset = -1) {
+    offset = _offset;
+  }
+  off_t offset;
+  ~TarFileData() { }
+};
+
+class TarDriver: public ArchiveDriver {
+public:
+  enum Compression {NONE, GZIP, BZIP} compression_used;
+
+  TarDriver(const char* _archive, bool create_archive, enum Compression _comp = NONE);
+  ~TarDriver();
+
+  bool open(FileNode* node);
+  int read(FileNode* node, char* buffer, size_t bytes, offset_t offset);
+  void close(FileNode* node);
+  bool saveArchive(FileMap* files, FileList* deleted);
+
+  bool buildFileSystem(FileSystem* fs);
+
+private:
+  TAR* tar_file;
+  FILE* tar_file_itself;
+  pthread_mutex_t mutex;
+
+  typedef off_t (*seekfunc_t)(int, off_t, int);
+  struct {
+    openfunc_t openfunc;
+    closefunc_t closefunc;
+    readfunc_t readfunc;
+    writefunc_t writefunc;
+    seekfunc_t seekfunc;
+  } functions;
+};
+
+int gzopen_frontend(char *pathname, int oflags, int mode);
+
+#endif

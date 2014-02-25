@@ -1,0 +1,96 @@
+Michal SAMEK
+FIT VUTBR 2012
+
+
+
+                   _________________________________________________  __
+                  /________________________________________________/ /_/ ///
+                  ___              __    _             ___________
+                 /   |  __________/ /_  (_)_   _____  / ____/ ___/
+                / /| | / ___/ ___/ __ \/ /| | / / _ \/ /_   \__ \
+               / ___ |/ /  / /__/ / / / / | |/ /  __/ __/  ___/ /
+              /_/  |_/_/   \___/_/ /_/_/  |___/\___/_/    /____/
+             ___________________________________________________  __
+            /__________________________________________________/ /_/ ///
+
+
+ArchiveFS je nástroj pro vytváření virtuálních souborových systémů (pomocí FUSE)
+ze souborových archivů.
+
+Stávající implementace podporuje formáty zip (čtení+zápis), iso(čtení+zápis),
+tar(čtení), tar+gz(čtení).
+
+
+///  P Ř E K L A D   A   I N S T A L A C E
+===============================================================================
+Aplikaci lze nainstalovat sekvencí kroků
+
+./configure
+make
+make install
+
+Ve výchozím nastavení se instalace provede do adresáře /usr/local. Toto lze
+změnit přepínačem --prefix.
+
+
+
+Program ke svému běhu potřebuje knihovny
+
+libfuse
+libzip
+libisofs
+libtar
+Knihovna libmagic je volitelná.
+
+Dále je třeba hlavičkový soubor boost/algorithm/string/predicate.hpp
+z knihovny BOOST jazyka C++.
+
+
+/// S P O U Š T Ě N Í   P R O G R A M U
+===============================================================================
+Ke standardnímu spuštění programu stačí zadat zdroj dat pro virtuální souborový
+systém a přípojný bod.
+
+  $ archivefs <archive> <mountpoint>
+  $ archivefs <folderWithArchives> <mountpoint>
+
+K zápisu dat do archivů dochází až při odpojení virtuálního souborového systému.
+Zejména zápis velkého objemu dat může trvat delší dobu! Proto je vhodné vždy
+ověřit, jestli program archivefs již byl ukončen.
+
+
+/// O V L A D A Č E   A R  C H I V Ů
+===============================================================================
+Program k práci s archivy potřebuje ovladače umožňující manipulaci s těmito
+typy souborů. Pokud jsou ovladače umístěny jinde než ve standardním umístění
+/usr/local/lib
+Toto alternativní umístění lze specifikovat přepínačem --drivers-path
+
+
+/// B U F F E R O V Á N Í   S O  U B O R Ů
+===============================================================================
+Přepínačem --buffer-limit lze ovlivnit kolik paměti může být použito k
+uchovávání dat jednoho souboru.
+
+
+/// M A Z Á N Í    S O U B O R Ů
+===============================================================================
+Pokud ve virtuálním souborovém systému smažete soubor, dojde k jeho přesunu do
+koše. Ve výchozím nastavení ovšem tento koš není ukládán do archivu. Odstraněné
+soubory nelze obnovit.
+Lze změnit přepínačem --keep-trash.
+
+
+/// V Y T V Á Ř E N Í   A R C H I V Ů
+===============================================================================
+Archivy, pro které je implementována podpora zápisu lze pomocí archivefs
+vytvořit a rovnou připojit k mountpointu. K tomuto použijte přepínač --create.
+
+
+/// S O U B O R O V Á   O P R Á V N Ě N Í
+===============================================================================
+Ve výchozím nastavení je vlastníkem všech souborů virtuálního souborového
+systému uživatel, pod jehož pověřeními program běží.
+
+Lze ovlivnit přepínačem --respect-rights, který aplikuje souborová oprávnění
+uložená v archivu.
