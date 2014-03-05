@@ -1,13 +1,4 @@
-                   _________________________________________________  __
-                  /________________________________________________/ /_/ ///
-                  ___              __    _             ___________
-                 /   |  __________/ /_  (_)_   _____  / ____/ ___/
-                / /| | / ___/ ___/ __ \/ /| | / / _ \/ /_   \__ \
-               / ___ |/ /  / /__/ / / / / | |/ /  __/ __/  ___/ /
-              /_/  |_/_/   \___/_/ /_/_/  |___/\___/_/    /____/
-             ___________________________________________________  __
-            /__________________________________________________/ /_/ ///
-
+# ArchiveFS
 
 ArchiveFS is a tool for creating virtual file systems (using FUSE framework) from
 archive files.
@@ -15,7 +6,7 @@ archive files.
 Current implementation supports ZIP(read/write), ISO(read/write), TAR(read), TGZ(read).
 
 
-== Compilation and instalation ==
+## Compilation and instalation
 Just follow classic scenario:
   ./configure
   make
@@ -34,7 +25,7 @@ This project is dependent on these libraries:
 * C++/BOOST (boost/algorithm/string/predicate.hpp)
 
 
-== How to run it ==
+## How to run it
 As a source for virtual filesystem you can use archive file or entire folder
 containing archive files.
 
@@ -46,20 +37,20 @@ lots of data can consume significant amount of time - always make sure if archiv
 has already exited (man ps | grep "archivefs").
 
 
-== Drivers ==
+## Drivers
 Archivefs needs its drivers for manipulation with archive files. These drivers
 can be added dynamicaly during runtime. By default these drivers reside in
 directory /usr/local/lib (to use different drivers storage use --drivers-path
 during startup of archivefs).
 
 
-== Buffering ==
+## Buffering
 Default behaviour of archivefs involves buffering data read from archive. By
 using argument --buffer-limit you can specify how much memory can be used for
 buffer for one file.
 
 
-== Erasing files in archives ==
+## Erasing files in archives
 If you erase files in virtual filesystem, they are by default copied to trash
 directory belonging to the filesystem (in case of archive file, this directory
 resides inside the archive). Since we don't want to keep deleted files inside
@@ -67,6 +58,6 @@ the archive, this trash directory is deleted unless specified by using swich
 --keep-trash.
 
 
-== Archive creation ==
+## Archive creation
 Archives with write support (ZIP) can be created and immediately mounted when
 using option --create.
