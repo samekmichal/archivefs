@@ -1,7 +1,3 @@
-Michal SAMEK
-FIT VUTBR 2012
-
-
 
                    _________________________________________________  __
                   /________________________________________________/ /_/ ///
@@ -14,83 +10,64 @@ FIT VUTBR 2012
             /__________________________________________________/ /_/ ///
 
 
-ArchiveFS je nástroj pro vytváření virtuálních souborových systémů (pomocí FUSE)
-ze souborových archivů.
+ArchiveFS is a tool for creating virtual file systems (using FUSE framework) from
+archive files.
 
-Stávající implementace podporuje formáty zip (čtení+zápis), iso(čtení+zápis),
-tar(čtení), tar+gz(čtení).
-
-
-///  P Ř E K L A D   A   I N S T A L A C E
-===============================================================================
-Aplikaci lze nainstalovat sekvencí kroků
-
-./configure
-make
-make install
-
-Ve výchozím nastavení se instalace provede do adresáře /usr/local. Toto lze
-změnit přepínačem --prefix.
+Current implementation supports ZIP(read/write), ISO(read/write), TAR(read), TGZ(read).
 
 
+== Compilation and instalation ==
+Just follow classic scenario:
+  ./configure
+  make
+  make install
 
-Program ke svému běhu potřebuje knihovny
-
-libfuse
-libzip
-libisofs
-libtar
-Knihovna libmagic je volitelná.
-
-Dále je třeba hlavičkový soubor boost/algorithm/string/predicate.hpp
-z knihovny BOOST jazyka C++.
+By default the installation will place the archivefs files to /usr/local directory.
+This can be changed with --prefix argument.
 
 
-/// S P O U Š T Ě N Í   P R O G R A M U
-===============================================================================
-Ke standardnímu spuštění programu stačí zadat zdroj dat pro virtuální souborový
-systém a přípojný bod.
+This project is dependent on these libraries:
+* libfuse
+* libzip
+* libisofs
+* libtar
+* libmagic (optional)
+* C++/BOOST (boost/algorithm/string/predicate.hpp)
+
+
+== How to run it ==
+As a source for virtual filesystem you can use archive file or entire folder
+containing archive files.
 
   $ archivefs <archive> <mountpoint>
   $ archivefs <folderWithArchives> <mountpoint>
 
-K zápisu dat do archivů dochází až při odpojení virtuálního souborového systému.
-Zejména zápis velkého objemu dat může trvat delší dobu! Proto je vhodné vždy
-ověřit, jestli program archivefs již byl ukončen.
+Data are written to archives while unmounting the file system. Especially writing
+lots of data can consume significant amount of time - always make sure if archivefs
+has already exited (man ps | grep "archivefs").
 
 
-/// O V L A D A Č E   A R  C H I V Ů
-===============================================================================
-Program k práci s archivy potřebuje ovladače umožňující manipulaci s těmito
-typy souborů. Pokud jsou ovladače umístěny jinde než ve standardním umístění
-/usr/local/lib
-Toto alternativní umístění lze specifikovat přepínačem --drivers-path
+== Drivers ==
+Archivefs needs its drivers for manipulation with archive files. These drivers
+can be added dynamicaly during runtime. By default these drivers reside in
+directory /usr/local/lib (to use different drivers storage use --drivers-path
+during startup of archivefs).
 
 
-/// B U F F E R O V Á N Í   S O  U B O R Ů
-===============================================================================
-Přepínačem --buffer-limit lze ovlivnit kolik paměti může být použito k
-uchovávání dat jednoho souboru.
+== Buffering ==
+Default behaviour of archivefs involves buffering data read from archive. By
+using argument --buffer-limit you can specify how much memory can be used for
+buffer for one file.
 
 
-/// M A Z Á N Í    S O U B O R Ů
-===============================================================================
-Pokud ve virtuálním souborovém systému smažete soubor, dojde k jeho přesunu do
-koše. Ve výchozím nastavení ovšem tento koš není ukládán do archivu. Odstraněné
-soubory nelze obnovit.
-Lze změnit přepínačem --keep-trash.
+== Erasing files in archives ==
+If you erase files in virtual filesystem, they are by default copied to trash
+directory belonging to the filesystem (in case of archive file, this directory
+resides inside the archive). Since we don't want to keep deleted files inside
+the archive, this trash directory is deleted unless specified by using swich
+--keep-trash.
 
 
-/// V Y T V Á Ř E N Í   A R C H I V Ů
-===============================================================================
-Archivy, pro které je implementována podpora zápisu lze pomocí archivefs
-vytvořit a rovnou připojit k mountpointu. K tomuto použijte přepínač --create.
-
-
-/// S O U B O R O V Á   O P R Á V N Ě N Í
-===============================================================================
-Ve výchozím nastavení je vlastníkem všech souborů virtuálního souborového
-systému uživatel, pod jehož pověřeními program běží.
-
-Lze ovlivnit přepínačem --respect-rights, který aplikuje souborová oprávnění
-uložená v archivu.
+== Archive creation ==
+Archives with write support (ZIP) can be created and immediately mounted when
+using option --create.
